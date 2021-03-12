@@ -3,8 +3,8 @@
 # Installation des mises à jour du système
 apt update -y && apt upgrade -y
 
-# Installation d'Apache, PHP, MariaDB, Curl et GIT
-apt install apache2 php libapache2-mod-php mariadb-server php-mysql php-curl php-gd php-intl php-json php-mbstring php-xml php-zip curl git-all rsync -y
+# Installation d'Apache, PHP, MariaDB et autres
+apt install apache2 php libapache2-mod-php mariadb-server php-mysql php-curl php-gd php-intl php-json php-mbstring php-xml php-zip curl git-all rsync cron -y
 
 # Activation de mods pour Apache
 a2enmod ssl proxy proxy_http proxy_wstunnel rewrite headers
