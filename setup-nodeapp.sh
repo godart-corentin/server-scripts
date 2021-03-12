@@ -12,9 +12,9 @@ then
 fi
 
 # Récupère le nom du repo git  
-GIT_REPO = $1
-BASENAME = $(basename $GIT_REPO)
-FOLDER_NAME = $(basename%.*)
+GIT_REPO=$1
+BASENAME=$(basename $GIT_REPO)
+FOLDER_NAME=$(basename%.*)
 
 # Copie le template site.conf
 cp site-node.conf /home/site-$FOLDER_NAME.conf  
@@ -28,10 +28,10 @@ fi
 # Clone le repo git
 cd /home/repositories && git clone $GIT_REPO
 
-PATH = "/home/repositories/$FOLDER_NAME"
+PATH="/home/repositories/$FOLDER_NAME"
 
 # Fichiers ENV
-HOME_FILES = /home/*
+HOME_FILES=/home/*
 
 for f in $FILES
 do

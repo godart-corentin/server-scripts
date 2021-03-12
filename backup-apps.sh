@@ -15,15 +15,15 @@ then
 fi
 
 # On initialise certaines variables
-TIMESTAMP = $(date +%F)
-BACKUP_DIR = /home/backup/repositories/$TIMESTAMP
+TIMESTAMP=$(date +%F)
+BACKUP_DIR=/home/backup/repositories/$TIMESTAMP
 KEEP_BACKUPS_FOR=30 #Jours
-SSH_USER = $1
-SSH_IP = $2
-SSH_PORT = $3
-TOTAL = $(find /home/repositories/* -maxdepth 0 -type d | wc -l)
-OUTPUT = ""
-COUNT = 1
+SSH_USER=$1
+SSH_IP=$2
+SSH_PORT=$3
+TOTAL=$(find /home/repositories/* -maxdepth 0 -type d | wc -l)
+OUTPUT=""
+COUNT=1
 
 # Création du dossier backup du jour
 mkdir -p $BACKUP_DIR
@@ -36,9 +36,9 @@ for dir in /home/repositories/*
 do
     if [-d "$dir"]
     then
-        FOLDER_NAME = $(basename "$dir")
-        BACKUP_FILE = "backup-$FOLDER_NAME-$TIMESTAMP.tar.gz"
-        OUTPUT+= "$FOLDER_NAME => $BACKUP_FILE\n"
+        FOLDER_NAME=$(basename "$dir")
+        BACKUP_FILE="backup-$FOLDER_NAME-$TIMESTAMP.tar.gz"
+        OUTPUT+="$FOLDER_NAME => $BACKUP_FILE\n"
         echo_status "Back up du dossier $FOLDER_NAME ($COUNT/$TOTAL)"
         tar -czvf $BACKUP_DIR/$BACKUP_FILE /home/repositories/$FOLDER_NAME --exclude='/home/backup/repositories'
         let COUNT++

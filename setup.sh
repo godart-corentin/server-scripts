@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # On récupère la distro linux
-DISTRO = $(lsb_release -is)
+DISTRO=$(lsb_release -is)
 
 # Installation des mises à jour du système
 apt update -y && apt upgrade -y
