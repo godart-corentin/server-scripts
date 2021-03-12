@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Include parse_yaml function
-. parse_yaml.sh
+. $(dirname "$0")/yaml.sh
 
 # Vérifie si le repo git est bien donné.
 # doitEtreBuild => boolean
@@ -12,19 +12,17 @@ fi
 
 # Récupère le nom du repo git  
 GIT_REPO=$1
-BASENAME=$(basename $GIT_REPO)
-FOLDER_NAME=$(basename%.*)
+FOLDER_NAME=${GIT_REPO%.*}
 
 # Copie le template site.conf
 cp site-node.conf /home/site-$FOLDER_NAME.conf  
 
 # Crée le répertoire /home/repositories s'il n'existe pas
-if [[ ! -f "/home/repositories" ]]; then
-  mkdir /home/repositories
-fi
+mkdir -p /home/repositories
 
 # Clone le repo git
-cd /home/repositories && git clone $GIT_REPO
+cd /home/repositories
+git clone $GIT_REPO
 
 PATH="/home/repositories/$FOLDER_NAME"
 
@@ -42,7 +40,7 @@ done
 cd $FOLDER_NAME && npm i
 
 # Build l'appli si l'argument 2 est "build"
-if [$2 = "true"]; then
+if [ $2 = "true" ]; then
   npm run build
 fi
 
@@ -55,11 +53,15 @@ if [[ ! -f "$PATH/deploy.yml" ]]; then
   exit -1
 fi
 
-eval $(parse_yaml deploy.yml "CONFIG_")
+create_variables deploy.yml
+
+echo $DOMAIN
+echo $PORT
+echo $MAIL
 
 # Configure le template selon les variables
-sed -i "s/{{DOMAIN}}/$CONFIG_DOMAIN/g" /home/site-$FOLDER_NAME.conf
-sed -i "s/{{PORT}}/$CONFIG_PORT/g" /home/site-$FOLDER_NAME.conf
+sed -i "s/{{DOMAIN}}/$DOMAIN/g" /home/site-$FOLDER_NAME.conf
+sed -i "s/{{PORT}}/$PORT/g" /home/site-$FOLDER_NAME.conf
 sed -i "s/{{PATH}}/$PATH/g" /home/site-$FOLDER_NAME.conf
 
 # Déplace la conf du site dans les dossiers d'apache
@@ -72,7 +74,7 @@ a2ensite site-$FOLDER_NAME.conf
 systemctl reload apache2
 
 # Lancement du certbot apache pour le HTTPS
-certbot -n --apache --agree-tos -d "$CONFIG_DOMAIN,www.$CONFIG_DOMAIN" -m $CONFIG_MAIL --redirect
+certbot -n --apache --agree-tos -d "$DOMAIN,www.$DOMAIN" -m $MAIL --redirect
 
 # Restart apache2
 systemctl reload apache2
