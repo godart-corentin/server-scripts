@@ -55,14 +55,10 @@ fi
 
 eval $(parse_yaml deploy.yml)
 
-echo $DOMAIN
-echo $PORT
-echo $MAIL
-
 # Configure le template selon les variables
-sed -i "s/{{DOMAIN}}/$DOMAIN/g" /home/site-$FOLDER_NAME.conf
-sed -i "s/{{PORT}}/$PORT/g" /home/site-$FOLDER_NAME.conf
-sed -i "s/{{PATH}}/$PATH/g" /home/site-$FOLDER_NAME.conf
+sed -i -e "s/{{DOMAIN}}/$DOMAIN/g" "/home/site-$FOLDER_NAME.conf"
+sed -i -e "s/{{PORT}}/$PORT/g" "/home/site-$FOLDER_NAME.conf"
+sed -i -e"s/{{PATH}}/$PATH/g" "/home/site-$FOLDER_NAME.conf"
 
 # Déplace la conf du site dans les dossiers d'apache
 mv /home/site-$FOLDER_NAME.conf /etc/apache2/sites-available/site-$FOLDER_NAME.conf
