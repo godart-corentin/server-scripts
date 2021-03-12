@@ -18,9 +18,9 @@ systemctl enable apache2
 apt install certbot python3-certbot-apache -y
 
 # Installation de Node.js et de Yarn
-if ["$DISTRO" = "Debian"]; then
+if [ $DISTRO = "Debian" ]; then
     curl -fsSL https://deb.nodesource.com/setup_lts.x | bash -
-elif ["$DISTRO" = "Ubuntu"]; then
+elif [ $DISTRO = "Ubuntu" ]; then
     curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
 else
     echo "Ce script ne fonctionne que sur Debian & Ubuntu."

@@ -33,7 +33,7 @@ find /home/backup/repositories/*  -mtime +$KEEP_BACKUPS_FOR -exec rm {} \;
 # On loop sur tous les dossiers présents dans /home/repositories
 for dir in /home/repositories/*
 do
-    if [-d "$dir"]; then
+    if [ -d "$dir" ]; then
       FOLDER_NAME=$(basename "$dir")
       BACKUP_FILE="backup-$FOLDER_NAME-$TIMESTAMP.tar.gz"
       OUTPUT+="$FOLDER_NAME => $BACKUP_FILE\n"
