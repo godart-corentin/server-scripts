@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# On récupère la distro linux
+DISTRO = $(lsb_release -is)
+
 # Installation des mises à jour du système
 apt update -y && apt upgrade -y
 
@@ -15,12 +18,18 @@ systemctl enable apache2
 apt install certbot python3-certbot-apache -y
 
 # Installation de Node.js et de Yarn
-curl -sL https://deb.nodesource.com/setup_14.x | sudo bash -
-cat /etc/apt/sources.list.d/nodesource.list
-deb https://deb.nodesource.com/node_14.x focal main
-deb-src https://deb.nodesource.com/node_14.x focal main
+if [$DISTRO = "Debian"]
+then
+    curl -fsSL https://deb.nodesource.com/setup_lts.x | bash -
+elif [$DISTRO = "Ubuntu"]
+then
+    curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+else
+    echo "Ce script ne fonctionne que sur Debian & Ubuntu."
+    exit -1
+fi
 
-apt install nodejs build-essential -y
+apt install nodejs -y
 
 curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
 echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
