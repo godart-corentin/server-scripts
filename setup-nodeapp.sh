@@ -12,7 +12,7 @@ fi
 
 # Récupère le nom du repo git  
 GIT_REPO=$1
-FOLDER_NAME=${GIT_REPO%.*}
+FOLDER_NAME=$(basename "$GIT_REPO" ".${GIT_REPO##*.}")
 
 # Copie le template site.conf
 cp site-node.conf /home/site-$FOLDER_NAME.conf  
@@ -24,7 +24,7 @@ mkdir -p /home/repositories
 cd /home/repositories
 git clone $GIT_REPO
 
-PATH="/home/repositories/$FOLDER_NAME"
+FOLDER_PATH="/home/repositories/$FOLDER_NAME"
 
 # Fichiers ENV
 HOME_FILES=/home/*
@@ -32,7 +32,7 @@ HOME_FILES=/home/*
 for f in $FILES
 do
   if [[ "$f" == .env*  ]]; then
-    mv /home/$f $PATH/$f
+    mv /home/$f $FOLDER_PATH/$f
   fi
 done
 
@@ -48,12 +48,12 @@ fi
 pm2 start pm2.json
 
 # Vérifie la présence du fichier deploy.yml et le parse
-if [[ ! -f "$PATH/deploy.yml" ]]; then
+if [[ ! -f "$FOLDER_PATH/deploy.yml" ]]; then
   echo "Le dossier /home/repositories/$FOLDER_NAME ne dispose pas d'un fichier deploy.yml"
   exit -1
 fi
 
-create_variables deploy.yml
+eval $(parse_yaml deploy.yml)
 
 echo $DOMAIN
 echo $PORT
