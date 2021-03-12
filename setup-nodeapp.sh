@@ -5,8 +5,7 @@
 
 # Vérifie si le repo git est bien donné.
 # doitEtreBuild => boolean
-if [ -z "$1" ]
-then
+if [ -z "$1" ]; then
   echo "Utilisation: sh ./setup-nodeapp.sh [git repo] [doitEtreBuild]"
   exit -1
 fi
@@ -20,8 +19,7 @@ FOLDER_NAME=$(basename%.*)
 cp site-node.conf /home/site-$FOLDER_NAME.conf  
 
 # Crée le répertoire /home/repositories s'il n'existe pas
-if [[ ! -f "/home/repositories" ]]
-then
+if [[ ! -f "/home/repositories" ]]; then
   mkdir /home/repositories
 fi
 
@@ -35,8 +33,7 @@ HOME_FILES=/home/*
 
 for f in $FILES
 do
-  if [[ "$f" == .env*  ]]
-  then
+  if [[ "$f" == .env*  ]]; then
     mv /home/$f $PATH/$f
   fi
 done
@@ -45,8 +42,7 @@ done
 cd $FOLDER_NAME && npm i
 
 # Build l'appli si l'argument 2 est "build"
-if [$2 = "true"]
-then
+if [$2 = "true"]; then
   npm run build
 fi
 
@@ -54,8 +50,7 @@ fi
 pm2 start pm2.json
 
 # Vérifie la présence du fichier deploy.yml et le parse
-if [[ ! -f "$PATH/deploy.yml" ]]
-then
+if [[ ! -f "$PATH/deploy.yml" ]]; then
   echo "Le dossier /home/repositories/$FOLDER_NAME ne dispose pas d'un fichier deploy.yml"
   exit -1
 fi
