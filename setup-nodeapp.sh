@@ -56,9 +56,9 @@ fi
 eval $(parse_yaml deploy.yml)
 
 # Configure le template selon les variables
-sed -i -e "s/{{DOMAIN}}/$DOMAIN/g" "/home/site-$FOLDER_NAME.conf"
-sed -i -e "s/{{PORT}}/$PORT/g" "/home/site-$FOLDER_NAME.conf"
-sed -i -e"s/{{PATH}}/$PATH/g" "/home/site-$FOLDER_NAME.conf"
+sed -i -e "s|DOMAIN|$DOMAIN|g" "/home/site-$FOLDER_NAME.conf"
+sed -i -e "s|PORT|$PORT|g" "/home/site-$FOLDER_NAME.conf"
+sed -i -e"s|PATH|$FOLDER_PATH|g" "/home/site-$FOLDER_NAME.conf"
 
 # Déplace la conf du site dans les dossiers d'apache
 mv /home/site-$FOLDER_NAME.conf /etc/apache2/sites-available/site-$FOLDER_NAME.conf
@@ -70,6 +70,7 @@ a2ensite site-$FOLDER_NAME.conf
 systemctl reload apache2
 
 # Lancement du certbot apache pour le HTTPS
+MAIL="youremail@gmail.com"
 certbot -n --apache --agree-tos -d "$DOMAIN,www.$DOMAIN" -m $MAIL --redirect
 
 # Restart apache2
